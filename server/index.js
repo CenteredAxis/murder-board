@@ -80,8 +80,8 @@ app.use(
 const distDir = path.join(__dirname, '..', 'dist')
 app.use(express.static(distDir))
 
-// ── SPA fallback ──
-app.get('*', (_req, res) => {
+// ── SPA fallback (Express 5 requires named param instead of bare *) ──
+app.get('/{*splat}', (_req, res) => {
   res.sendFile(path.join(distDir, 'index.html'))
 })
 
