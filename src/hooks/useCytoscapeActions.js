@@ -301,6 +301,9 @@ export function useCytoscapeActions(cyRef, clearCentrality) {
     el.data('eventLocation', editingNode.eventLocation || '')
     el.data('eventDescription', editingNode.eventDescription || '')
 
+    // Force Cytoscape to re-evaluate data-dependent style selectors (e.g. avatarUrl background-image)
+    cy.style().update()
+
     setEditingNode(null)
     clearCentrality()
     syncState()
