@@ -114,16 +114,16 @@ export function importGraphFromJSON(cy, file, syncCallback, runLayoutCallback, c
       const raw = JSON.parse(ev.target.result)
       if (!cy) return
 
-      // Format auto-detection: Kumu vs native Murder Board
+      // Format auto-detection: Kumu vs native Link Analysis
       let graphData
       if (Array.isArray(raw.elements) && Array.isArray(raw.connections)) {
         // Kumu format detected
         graphData = convertKumuToNative(raw)
       } else if (raw.nodes) {
-        // Native Murder Board format
+        // Native Link Analysis format
         graphData = raw
       } else {
-        alert('Unrecognized JSON format. Expected Murder Board or Kumu format.')
+        alert('Unrecognized JSON format. Expected Link Analysis or Kumu format.')
         return
       }
 

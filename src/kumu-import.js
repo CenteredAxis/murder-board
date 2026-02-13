@@ -1,7 +1,7 @@
 /**
  * Kumu JSON Import Converter
  *
- * Transforms Kumu (kumu.io) JSON export format into the Murder Board
+ * Transforms Kumu (kumu.io) JSON export format into the Link Analysis
  * native import format so the existing import pipeline can handle it.
  *
  * Pure function — no side effects, no project imports.
@@ -102,7 +102,7 @@ function buildMetadata(attrs, resolvedType, originalType) {
 function buildTags(kumuTags) {
   if (!kumuTags) return '[]'
   if (Array.isArray(kumuTags)) {
-    // Kumu tags are plain strings — wrap each in the Murder Board format if needed,
+    // Kumu tags are plain strings — wrap each in the Link Analysis format if needed,
     // but since the groups system isn't fully wired yet, store as simple string array.
     return JSON.stringify(kumuTags)
   }
@@ -115,7 +115,7 @@ function buildTags(kumuTags) {
 }
 
 /**
- * Map a Kumu connection type to a Murder Board relationship + customLabel.
+ * Map a Kumu connection type to a Link Analysis relationship + customLabel.
  * If the connection type maps to a known relationship, customLabel gets the
  * Kumu label attribute. If it doesn't map, relationship = 'Unknown' and
  * customLabel preserves the original connection type.

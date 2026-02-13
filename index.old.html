@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Murder Board</title>
+<title>Link Analysis Board</title>
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   :root{
@@ -218,7 +218,7 @@
 </div>
 
 <div id="toolbar">
-  <span class="title">MURDER BOARD</span>
+  <span class="title">LINK ANALYSIS</span>
   <div class="toolbar-sep"></div>
   <button onclick="addNode()" title="Add Person"><span>+ Person</span></button>
   <button id="connectModeBtn" onclick="toggleConnectMode()" title="Draw connections between people"><span>Connect</span></button>
@@ -853,7 +853,7 @@ function exportBoard() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'murder-board-' + new Date().toISOString().slice(0,10) + '.json';
+  a.download = 'link-analysis-' + new Date().toISOString().slice(0,10) + '.json';
   a.click();
   URL.revokeObjectURL(url);
 }

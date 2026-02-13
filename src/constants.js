@@ -2,8 +2,8 @@
 export const SCHEMA_VERSION = 2
 
 // ── localStorage keys ──
-export const LOCAL_STORAGE_KEY = 'murder-board-graph'
-export const META_STORAGE_KEY = 'murder-board-meta'
+export const LOCAL_STORAGE_KEY = 'link-analysis-graph'
+export const META_STORAGE_KEY = 'link-analysis-meta'
 
 // ── Node Types ──
 export const NODE_TYPES = ['Person', 'Organization', 'Phone', 'Event']
@@ -89,7 +89,7 @@ export const CONFIDENCE_COLORS = {
 }
 
 // ── AI Settings ──
-export const AI_SETTINGS_KEY = 'murder-board-ai-settings'
+export const AI_SETTINGS_KEY = 'link-analysis-ai-settings'
 
 export const DEFAULT_AI_SETTINGS = {
   provider: 'ollama',

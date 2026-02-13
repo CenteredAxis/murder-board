@@ -1,4 +1,4 @@
-# Murder Board — Link Analysis Tool
+# Link Analysis Board
 
 An interactive link analysis and relationship visualization tool for investigators, analysts, and intelligence professionals. Build visual investigation boards to map entities, connections, and patterns — with optional AI-powered entity extraction from unstructured text.
 
@@ -47,8 +47,8 @@ npm run preview
 ### Docker
 
 ```bash
-docker build -t murder-board .
-docker run -p 80:80 murder-board
+docker build -t link-analysis .
+docker run -p 3000:3000 -v link-analysis-uploads:/app/server/uploads link-analysis
 ```
 
 ## AI Entity Extraction

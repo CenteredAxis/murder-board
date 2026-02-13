@@ -87,7 +87,7 @@ app.get('/{*splat}', (_req, res) => {
 
 // ── Start server ──
 app.listen(PORT, () => {
-  console.log(`Murder Board server running on port ${PORT}`)
+  console.log(`Link Analysis server running on port ${PORT}`)
   console.log(`Uploads directory: ${uploadsDir}`)
   console.log(`Ollama proxy target: ${OLLAMA_HOST}`)
 })
