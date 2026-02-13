@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { testConnection } from '../../ai/aiService'
 
 const PROVIDERS = [
@@ -11,8 +11,33 @@ export default function AISettingsPanel({ settings, updateSettings, onClose }) {
   const [draft, setDraft] = useState({ ...settings })
   const [testing, setTesting] = useState(false)
   const [testResult, setTestResult] = useState(null) // { ok, message, models? }
+  const [availableModels, setAvailableModels] = useState([])
+  const [loadingModels, setLoadingModels] = useState(false)
+  const hasFetched = useRef(false)
 
   const update = (field, value) => setDraft((d) => ({ ...d, [field]: value }))
+
+  // Auto-fetch models on mount when provider is Ollama
+  useEffect(() => {
+    if (hasFetched.current) return
+    if (draft.provider === 'ollama' && draft.endpoint) {
+      hasFetched.current = true
+      setLoadingModels(true)
+      testConnection(draft)
+        .then((result) => {
+          const models = result.models || []
+          setAvailableModels(models)
+          // If current model isn't in list, select first available
+          if (models.length > 0 && !models.includes(draft.model)) {
+            setDraft((d) => ({ ...d, model: models[0] }))
+          }
+        })
+        .catch(() => {
+          // Silent fail on auto-fetch — user can still type manually
+        })
+        .finally(() => setLoadingModels(false))
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleProviderChange(provider) {
     const preset = PROVIDERS.find((p) => p.value === provider)
@@ -22,6 +47,9 @@ export default function AISettingsPanel({ settings, updateSettings, onClose }) {
       endpoint: preset?.defaultEndpoint || d.endpoint,
     }))
     setTestResult(null)
+    if (provider !== 'ollama') {
+      setAvailableModels([])
+    }
   }
 
   async function handleTestConnection() {
@@ -29,13 +57,19 @@ export default function AISettingsPanel({ settings, updateSettings, onClose }) {
     setTestResult(null)
     try {
       const result = await testConnection(draft)
+      const models = result.models || []
+      setAvailableModels(models)
       setTestResult({
         ok: true,
-        message: result.models?.length
-          ? `Connected! ${result.models.length} model(s) available.`
+        message: models.length
+          ? `Connected! ${models.length} model(s) available.`
           : 'Connected successfully!',
-        models: result.models || [],
+        models,
       })
+      // If current model isn't in the returned list, select first available
+      if (models.length > 0 && !models.includes(draft.model)) {
+        setDraft((d) => ({ ...d, model: models[0] }))
+      }
     } catch (err) {
       setTestResult({ ok: false, message: err.message, models: [] })
     } finally {
@@ -82,14 +116,28 @@ export default function AISettingsPanel({ settings, updateSettings, onClose }) {
 
       {/* Model */}
       <div className="mb-2">
-        <label className="mb-1 block text-xs text-gray-500">Model</label>
-        <input
-          type="text"
-          value={draft.model}
-          onChange={(e) => update('model', e.target.value)}
-          placeholder="qwen2.5:72b"
-          className="w-full rounded border border-gray-700 bg-gray-800 px-2 py-1.5 text-sm text-gray-100 outline-none focus:border-amber-500"
-        />
+        <label className="mb-1 block text-xs text-gray-500">
+          Model{loadingModels ? ' (loading…)' : ''}
+        </label>
+        {availableModels.length > 0 && draft.provider === 'ollama' ? (
+          <select
+            value={draft.model}
+            onChange={(e) => update('model', e.target.value)}
+            className="w-full rounded border border-gray-700 bg-gray-800 px-2 py-1.5 text-sm text-gray-100 outline-none focus:border-amber-500"
+          >
+            {availableModels.map((m) => (
+              <option key={m} value={m}>{m}</option>
+            ))}
+          </select>
+        ) : (
+          <input
+            type="text"
+            value={draft.model}
+            onChange={(e) => update('model', e.target.value)}
+            placeholder="qwen2.5:72b"
+            className="w-full rounded border border-gray-700 bg-gray-800 px-2 py-1.5 text-sm text-gray-100 outline-none focus:border-amber-500"
+          />
+        )}
       </div>
 
       {/* API Key (hidden for Ollama) */}
@@ -140,12 +188,6 @@ export default function AISettingsPanel({ settings, updateSettings, onClose }) {
           }`}
         >
           {testResult.message}
-          {testResult.models?.length > 0 && (
-            <div className="mt-1 text-gray-400">
-              Models: {testResult.models.slice(0, 8).join(', ')}
-              {testResult.models.length > 8 && ` (+${testResult.models.length - 8} more)`}
-            </div>
-          )}
         </div>
       )}
 
