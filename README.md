@@ -48,7 +48,7 @@ npm run preview
 
 ```bash
 docker build -t link-analysis .
-docker run -p 3000:3000 -v link-analysis-uploads:/app/server/uploads link-analysis
+docker run -p 80:80 -v link-analysis-uploads:/app/server/uploads link-analysis
 ```
 
 ## AI Entity Extraction

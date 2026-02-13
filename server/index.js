@@ -6,7 +6,7 @@ const fs = require('fs')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 80
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434'
 
 // ── Ensure uploads directory exists ──
